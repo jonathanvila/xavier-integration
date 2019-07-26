@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
-        </dependency>    
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>
@@ -244,7 +244,7 @@
             <artifactId>kafka</artifactId>
             <version>1.11.3</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
     </dependencies>
 
 
@@ -268,6 +268,13 @@
                     <excludes>
                         <exclude>**/*KT.java</exclude>
                     </excludes>
+                    <!-- Added to fix
+                        https://github.com/testcontainers/testcontainers-java/issues/892
+                        https://github.com/testcontainers/testcontainers-java/issues/700#issuecomment-457541087
+                    -->
+                    <environmentVariables>
+                        <TESTCONTAINERS_RYUK_DISABLED>true</TESTCONTAINERS_RYUK_DISABLED>
+                    </environmentVariables>
                 </configuration>
             </plugin>
             <plugin>
