@@ -225,8 +225,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         camelContext.startRoute("calculate-costsavings");
         camelContext.startRoute("calculate-vmworkloadinventory");
         camelContext.startRoute("flags-shared-disks");
-
-        String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
+        camelContext.startRoute("add-file-number-header");
 
         camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));

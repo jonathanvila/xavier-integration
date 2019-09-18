@@ -5,10 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.camel.Attachment;
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
+import org.apache.camel.Message;
 import org.apache.camel.Predicate;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.dataformat.tarfile.TarIterator;
 import org.apache.camel.dataformat.tarfile.TarSplitter;
+import org.apache.camel.dataformat.zipfile.ZipIterator;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.commons.lang3.StringUtils;
@@ -29,10 +33,12 @@ import javax.activation.DataHandler;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -47,6 +53,7 @@ public class MainRouteBuilder extends RouteBuilder {
 
     public static String ANALYSIS_ID = "analysisId";
     public static String USERNAME = "analysisUsername";
+    public static String PAYLOADS_TO_BE_ANALYZED = "analysisPayloadsToBeAnalyzed";
 
     @Value("${insights.upload.host}")
     private String uploadHost;
@@ -168,6 +175,7 @@ public class MainRouteBuilder extends RouteBuilder {
                     .endChoice()
                     .when(isZippedFile("tar.gz"))
                         .unmarshal().gzip()
+                        .to("direct:add-file-number-header")
                         .split(new TarSplitter())
                             .streaming()
                             .to("direct:calculate")
@@ -188,7 +196,7 @@ public class MainRouteBuilder extends RouteBuilder {
 
 
         from("direct:calculate-costsavings").id("calculate-costsavings")
-                    .transform().method("calculator", "calculate(${body}, ${header.MA_metadata})")
+                .transform().method("calculator", "calculate(${body}, ${header.MA_metadata})")
                 .aggregate(simple("${header.MA_metadata['analysisId']}"))
                     .aggregationStrategy()
                         .body(UploadFormInputDataModel.class, (old,neu) -> {
@@ -196,7 +204,7 @@ public class MainRouteBuilder extends RouteBuilder {
                            neu.setHypervisor(neu.getHypervisor() + ((old != null) ? old.getHypervisor() : 0));
                            return neu;
                         } )
-                    .completionTimeout(10000L) //TODO find another way to know the size of the list ( TarSplitter does not inform CamelSplitSize )
+                .completionSize(simple("${header." + PAYLOADS_TO_BE_ANALYZED + "}"))
                 .log("Message to send to AMQ : ${body}")
                 .to("jms:queue:uploadFormInputDataModel")
                 .end();
@@ -218,6 +226,22 @@ public class MainRouteBuilder extends RouteBuilder {
         from("direct:request-forbidden")
                 .id("request-forbidden")
                 .process(httpError403());
+
+        from("direct:add-file-number-header")
+                .id("add-file-number-header")
+                .process(exchange -> {
+                    // TODO improve this to work in the zip and json use cases
+                    // maybe having an header added in the `isZippedFile` to
+                    // define the type of compressed file could help
+//                    Iterator<Message> iterator = new ZipIterator(exchange, exchange.getIn().getBody(InputStream.class));
+                    Iterator<Message> iterator = new TarIterator(exchange, exchange.getIn().getBody(InputStream.class));
+                    int total = 0;
+                    while(iterator.hasNext()) {
+                        Message message = iterator.next();
+                        if (message != null) total++;
+                    }
+                    exchange.getIn().getHeaders().put(PAYLOADS_TO_BE_ANALYZED, total);
+                });
     }
 
     private Predicate isResponseSuccess() {
