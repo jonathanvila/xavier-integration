@@ -95,7 +95,6 @@ import static org.testcontainers.containers.localstack.LocalStackContainer.Servi
 public class EndToEndTest {
     private static Logger logger = LoggerFactory.getLogger(EndToEndTest.class);
 
-
     @ClassRule
     public static GenericContainer activemq = new GenericContainer<>("vromero/activemq-artemis")
             .withExposedPorts(61616, 8161)
@@ -447,6 +446,19 @@ public class EndToEndTest {
                         workloadSummaryReport_PerformanceTest.getBody() != null &&
                         workloadSummaryReport_PerformanceTest.getBody().getSummaryModels() != null);
              });
+
+        // Test with a file with missing attributes
+        new RestTemplate().postForEntity("http://localhost:" + serverPort + "/api/xavier/upload", getRequestEntityForUploadRESTCall("cfme_inventory-v1_0_0_with_missing_attributes.json"), String.class);
+        await()
+                .atMost(timeoutMilliseconds_InitialCostSavingsReport, TimeUnit.MILLISECONDS)
+                .with().pollInterval(Duration.ONE_HUNDRED_MILLISECONDS)
+                .until(() -> {
+                    ResponseEntity<WorkloadSummaryReportModel> workloadSummaryReport_PerformanceMissingAttributes = new RestTemplate().exchange("http://localhost:" + serverPort + "/api/xavier/report/3/workload-summary", HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<WorkloadSummaryReportModel>() {});
+                    return (workloadSummaryReport_PerformanceMissingAttributes != null &&
+                            workloadSummaryReport_PerformanceMissingAttributes.getStatusCodeValue() == 200 &&
+                            workloadSummaryReport_PerformanceMissingAttributes.getBody() != null &&
+                            workloadSummaryReport_PerformanceMissingAttributes.getBody().getSummaryModels() != null);
+                });
 
         camelContext.stop();
     }
