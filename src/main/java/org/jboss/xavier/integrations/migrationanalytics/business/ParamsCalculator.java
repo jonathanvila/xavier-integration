@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Named("calculator")
 public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
@@ -27,7 +28,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         if (cputotalcores != null && cpucorespersocket != null && cpucorespersocket > 0) {
             return (int) Math.ceil(cputotalcores / (cpucorespersocket * 2.0));
         } else {
-            return 0;
+            return null;
         }
     }
 
@@ -44,6 +45,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         Integer numberofhypervisors = ((JSONArray) JsonPath.read(cloudFormsJson, hypervisorPath))
                 .stream()
                 .map(e -> calculateHypervisors((Map) e, cpuTotalCoresPath, cpuCoresPerSocketPath))
+                .filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
                 .sum();
         Long totalspace = ((List<Number>) JsonPath.parse(cloudFormsJson).read(totalSpacePath)).stream().mapToLong(Number::longValue).sum();

@@ -153,7 +153,7 @@ public class ParamsCalculatorTest {
         mapa.put("cpu_total_cores", 4);
         mapa.put("cpu_cores_per_socket", 0);
         mapa.put("ems_cluster_id", 1);
-        assertThat(reportCalculator.calculateHypervisors(mapa, "cpu_total_cores", "cpu_cores_per_socket")).isEqualTo(0);
+        assertThat(reportCalculator.calculateHypervisors(mapa, "cpu_total_cores", "cpu_cores_per_socket")).isNull();
     }
 
 }
