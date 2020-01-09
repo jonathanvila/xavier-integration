@@ -28,14 +28,14 @@ public class MainRouteBuilder_S3Test {
     @Test
     @Ignore
     public void s3Test() throws Exception {
-        camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
                 String keyValue = UUID.randomUUID().toString();
                 System.out.println(String.format("UUID [%s]", keyValue));
-                from("file:///home/jonathan/Downloads?fileName=cfme_inventory_0.json&noop=true").routeId("s3route")
+                // You need to change here the "myfolder" part
+                from("file:///myfolder?fileName=cfme_inventory_0.json&noop=true").routeId("s3route")
                         .convertBodyTo(byte[].class)
                         .setHeader(S3Constants.CONTENT_LENGTH, simple("${in.header.CamelFileLength}"))
                         .setHeader(S3Constants.KEY, simple(keyValue))

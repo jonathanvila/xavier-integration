@@ -1,0 +1,282 @@
+{
+    "content": [
+      {
+        "id": 24768,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "lb",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux Server release 7.6 (Maipo)",
+        "diskSpace": 2614591488,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [],
+        "complexity": "Easy",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24767,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "jboss1",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux Server release 7.6 (Maipo)",
+        "diskSpace": 4745691136,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [
+          "Red Hat JBoss EAP"
+        ],
+        "complexity": "Medium",
+        "recommendedTargetsIMS": [
+          "RHV"
+        ],
+        "flagsIMS": [
+          "RDM"
+        ],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-47",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24766,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "cluster1",
+        "osName": "CentOS 7 (64-bit)",
+        "osDescription": "CentOS 7 (64-bit)",
+        "diskSpace": 0,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [],
+        "complexity": "Medium",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "Convert2RHEL",
+          "OSP"
+        ],
+        "flagsIMS": [
+          "Shared Disk"
+        ],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": false
+      },
+      {
+        "id": 24765,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "cluster0",
+        "osName": "CentOS 7 (64-bit)",
+        "osDescription": "CentOS 7 (64-bit)",
+        "diskSpace": 0,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [],
+        "complexity": "Medium",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "Convert2RHEL",
+          "OSP"
+        ],
+        "flagsIMS": [
+          "Shared Disk"
+        ],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-47",
+        "creationDate": 1568305947979,
+        "ssaEnabled": false
+      },
+      {
+        "id": 24764,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "weblogic",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux Server release 7.7 (Maipo)",
+        "diskSpace": 9302904832,
+        "memory": 4294967296,
+        "cpuCores": 2,
+        "workloads": [
+          "Oracle Weblogic"
+        ],
+        "complexity": "Easy",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24763,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "oracle_db",
+        "osName": "Linux",
+        "osDescription": "CentOS Linux release 7.6.1810 (Core) ",
+        "diskSpace": 18612346880,
+        "memory": 8589934592,
+        "cpuCores": 2,
+        "workloads": [
+          "Oracle Database"
+        ],
+        "complexity": "Medium",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "Convert2RHEL",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24762,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "mssql_db",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux Server release 7.6 (Maipo)",
+        "diskSpace": 3317547008,
+        "memory": 4294967296,
+        "cpuCores": 2,
+        "workloads": [
+          "Microsoft SQL Server"
+        ],
+        "complexity": "Easy",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24761,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "db",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux Server release 7.6 (Maipo)",
+        "diskSpace": 2669137920,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [],
+        "complexity": "Easy",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-47",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24760,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "jboss0",
+        "osName": "Linux",
+        "osDescription": "Red Hat Enterprise Linux 7 (64-bit)",
+        "diskSpace": 4795150336,
+        "memory": 2147483648,
+        "cpuCores": 1,
+        "workloads": [
+          "Red Hat JBoss EAP"
+        ],
+        "complexity": "Medium",
+        "recommendedTargetsIMS": [
+          "RHV"
+        ],
+        "flagsIMS": [
+          "RDM"
+        ],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      },
+      {
+        "id": 24759,
+        "provider": "vSphere",
+        "datacenter": "Datacenter",
+        "cluster": "VMCluster",
+        "vmName": "wmssql_db",
+        "osName": "ServerNT",
+        "osDescription": "Windows Server 2016 Standard",
+        "diskSpace": 15177039872,
+        "memory": 4294967296,
+        "cpuCores": 1,
+        "workloads": [
+          "Microsoft SQL Server"
+        ],
+        "complexity": "Easy",
+        "recommendedTargetsIMS": [
+          "RHV",
+          "OSP"
+        ],
+        "flagsIMS": [],
+        "product": "VMware vCenter",
+        "version": "6.7.2",
+        "host_name": "host-31",
+        "creationDate": 1568305947979,
+        "ssaEnabled": true
+      }
+    ],
+    "last": false,
+    "totalPages": 2,
+    "totalElements": 14,
+    "first": true,
+    "sort": [
+      {
+        "direction": "DESC",
+        "property": "id",
+        "ignoreCase": false,
+        "nullHandling": "NATIVE",
+        "ascending": false,
+        "descending": true
+      }
+    ],
+    "numberOfElements": 10,
+    "size": 10,
+    "number": 0
+  }

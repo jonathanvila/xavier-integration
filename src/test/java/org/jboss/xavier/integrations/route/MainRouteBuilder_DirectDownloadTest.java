@@ -21,7 +21,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@MockEndpointsAndSkip("http4:oldhost|direct:unzip-file")
+@MockEndpointsAndSkip("http.*|direct:unzip-file")
 public class MainRouteBuilder_DirectDownloadTest extends XavierCamelTest {
     @Autowired
     MainRouteBuilder mainRouteBuilder;
@@ -47,7 +47,7 @@ public class MainRouteBuilder_DirectDownloadTest extends XavierCamelTest {
         camelContext.getRouteDefinition("download-file").adviceWith(camelContext, new AdviceWithRouteBuilder() {
             @Override
             public void configure() {
-                weaveByToUri("http4:.*").after()
+                weaveByToUri("http.*").after()
                         .setHeader(Exchange.HTTP_RESPONSE_CODE, simple("200"))
                         .setBody(exchange -> this.getClass().getClassLoader().getResourceAsStream("cloudforms-export-v1_0_0.json"));
             }
@@ -82,6 +82,7 @@ public class MainRouteBuilder_DirectDownloadTest extends XavierCamelTest {
         //Then
         mockOldHost.assertIsSatisfied();
         assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader(RouteBuilderExceptionHandler.MA_METADATA, Map.class).get("dummy")).isEqualTo("CID1234");
+        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader(RouteBuilderExceptionHandler.MA_METADATA, Map.class).get("org_id")).isEqualTo("6340056");
         assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader(RouteBuilderExceptionHandler.MA_METADATA, Map.class).get("auth_time")).isEqualTo("0");
         mockUnzipFile.assertIsSatisfied();
         assertThat(analysisService.findByOwnerAndId(analysisModel.getOwner(), analysisModel.getId()).getPayloadStorageId()).isEqualToIgnoringCase("S3KEY123");

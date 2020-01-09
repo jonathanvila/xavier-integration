@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+
+  drools-wb:
+    image: jboss/drools-workbench-showcase:7.18.0.Final
+    ports:
+      - 8001:8001
+      - 18080:8080
+    environment:
+      - KIE_ADMIN_USER=kieserver
+      - KIE_ADMIN_PWD=kieserver1!
+    
+  kie-server:
+    image: jboss/kie-server-showcase:7.18.0.Final
+    links:
+      - drools-wb:kie-wb
+    depends_on:
+      - drools-wb
+    ports:
+      - 28080:8080
+    environment:
+      - KIE_SERVER_ID=analytics-kieserver
+      - KIE_ADMIN_USER=kieserver
+      - KIE_ADMIN_PWD=kieserver1!
+      - KIE_SERVER_MODE=DEVELOPMENT
+      - MAVEN_REPOS=BC,CENTRAL
+      - BC_MAVEN_REPO_URL=http://kie-wb:8080/business-central/maven2
+      - BC_MAVEN_REPO_PASSWORD=admin
+      - BC_MAVEN_REPO_USER=admin
+      - CENTRAL_MAVEN_REPO_URL=https://repo.maven.apache.org/maven2
+      - KIE_SERVER_CONTROLLER=http://kie-wb:8080/business-central/rest/controller
+      - KIE_REPOSITORY=https://repository.jboss.org/nexus/content/groups/public-jboss
+      - KIE_SERVER_CONTROLLER_PWD=admin
+      - KIE_SERVER_CONTROLLER_USER=admin
+      - KIE_SERVER_LOCATION=http://kie-server:8080/kie-server/services/rest/server
+      - KIE_SERVER_PWD=kieserver1!
+      - KIE_SERVER_USER=kieserver

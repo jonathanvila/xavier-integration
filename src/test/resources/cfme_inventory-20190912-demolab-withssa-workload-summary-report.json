@@ -1,0 +1,49 @@
+{
+    "id": 461,
+    "summaryModels": [
+      {
+        "id": 486,
+        "provider": "vSphere",
+        "clusters": 1,
+        "sockets": 20,
+        "vms": 14,
+        "hosts": 2,
+        "product": "VMware vCenter",
+        "version": "6.7.2"
+      }
+    ],
+    "complexityModel": {
+      "id": 461,
+      "easy": 7,
+      "medium": 6,
+      "hard": 0,
+      "unknown": 1
+    },
+    "recommendedTargetsIMSModel": {
+      "id": 410,
+      "total": 14,
+      "rhv": 13,
+      "rhel": 4,
+      "osp": 11
+    },
+    "workloadsDetectedOSTypeModels": [
+      {
+        "id": 470,
+        "osName": "ServerNT",
+        "total": 1
+      },
+      {
+        "id": 469,
+        "osName": "Linux",
+        "total": 8
+      }
+    ],
+    "scanRunModels": [
+      {
+        "id": 311,
+        "target": "vSphere",
+        "date": 1568239200000,
+        "smartStateEnabled": "Virt Platform + SmartState"
+      }
+    ]
+  }

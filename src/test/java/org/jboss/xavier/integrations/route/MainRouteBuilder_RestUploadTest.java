@@ -38,7 +38,7 @@ public class MainRouteBuilder_RestUploadTest extends XavierCamelTest {
     public void setup() {
         camel_context = camel_context.substring(0, camel_context.indexOf("*"));
     }
-
+   
     @Test
     public void mainRouteBuilder_routeRestUpload_ContentGiven_ShouldUpload() throws Exception {
         //Given

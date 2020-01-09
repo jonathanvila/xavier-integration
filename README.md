@@ -107,5 +107,12 @@ Snippets of calls :
 * See status of encription on a bucket : `aws s3api get-bucket-encryption --bucket xavier-dev`
 * Enable encription on a bucket : `aws s3api put-bucket-encryption --bucket xavier-dev --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}' `  
 
+
+# Testing
+For the End2End test a docker container test framework is used : [Testcontainers](www.testcontainers.org).  
+If using the Fedora docker package it is needed to set the *ryuk.container.privileged=true* property in the local ~/.testcontainers.properties file in order to allow [Ryuk to be a privileged container](https://www.testcontainers.org/features/configuration/#customizing-ryuk-resource-reaper).
+
 # References
 
+
+ 

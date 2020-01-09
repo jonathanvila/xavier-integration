@@ -1189,7 +1189,7 @@
                                     },
                                     {
                                         "name": "KIESERVER_CONTAINER",
-                                        "value": "sample-analytics_1.0.0-SNAPSHOT"
+                                        "value": "xavier-analytics_0.0.1-SNAPSHOT"
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
