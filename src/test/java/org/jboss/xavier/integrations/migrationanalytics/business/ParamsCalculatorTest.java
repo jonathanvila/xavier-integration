@@ -1,12 +1,10 @@
-package org.jboss.xavier.integrations.migrationanalytics.output;
+package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
-import org.jboss.xavier.integrations.migrationanalytics.business.ParamsCalculator;
 import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -153,7 +151,7 @@ public class ParamsCalculatorTest {
         mapa.put("cpu_total_cores", 4);
         mapa.put("cpu_cores_per_socket", 0);
         mapa.put("ems_cluster_id", 1);
-        assertThat(reportCalculator.calculateHypervisors(mapa, "cpu_total_cores", "cpu_cores_per_socket")).isNull();
+        assertThat(reportCalculator.calculateHypervisors(mapa, "cpu_total_cores", "cpu_cores_per_socket", analysisId.toString())).isNull();
     }
 
     @Test
