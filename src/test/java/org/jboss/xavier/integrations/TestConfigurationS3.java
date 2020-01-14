@@ -18,6 +18,7 @@ public class TestConfigurationS3 {
     public AmazonS3 getAmazonS3client() {
         return AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("dummyKey", "dummySecret")))
+                .withChunkedEncodingDisabled(true)
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(s3_host, "us-east-1"))
                 .build();
     }
