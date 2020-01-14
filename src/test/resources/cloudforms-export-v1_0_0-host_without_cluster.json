@@ -7666,7 +7666,8 @@
                     "cpu_cores_per_socket": 1,
                     "cpu_total_cores": 4,
                     "ems_cluster": {
-                        "ems_ref": "domain-c26"
+                        "COMMENT": "Host without cluster",
+                        "ems_ref": "__domain-c26"
                     },
                     "hardware": {
                         "memory_mb": 20479

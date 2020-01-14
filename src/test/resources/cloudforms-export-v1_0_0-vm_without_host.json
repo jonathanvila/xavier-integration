@@ -374,10 +374,12 @@
                     "disks_aligned": "True",
                     "ems_ref": "vm-321",
                     "has_rdm_disk": false,
-                    "_host": {
+
+                    "__host": {
                         "COMMENT" : "Making the host array not found",
                         "_ems_ref": "host-31"
                     },
+
                     "power_state": "on",
                     "ram_size_in_bytes": 2147483648,
                     "retired": null,
@@ -1255,10 +1257,12 @@
                     "disks_aligned": "True",
                     "ems_ref": "vm-225",
                     "has_rdm_disk": false,
+
                     "host": {
                         "COMMENT": "Made this host not found",
-                        "ems_ref": "_host-47"
+                        "ems_ref": "__host-47"
                     },
+
                     "power_state": "on",
                     "ram_size_in_bytes": 2147483648,
                     "retired": null,
