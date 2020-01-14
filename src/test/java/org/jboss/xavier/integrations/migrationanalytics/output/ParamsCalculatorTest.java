@@ -156,4 +156,25 @@ public class ParamsCalculatorTest {
         assertThat(reportCalculator.calculateHypervisors(mapa, "cpu_total_cores", "cpu_cores_per_socket")).isNull();
     }
 
+    @Test
+    public void calculator_getValuesFromMapWithoutClassCastException() throws InstantiationException, IllegalAccessException {
+        Map<String,Object> map = new HashMap<>();
+        map.put("integer", 100);
+        map.put("string", "hola");
+        map.put("fake_integer", "AB100");
+
+        ParamsCalculator paramsCalculator = new ParamsCalculator(null);
+        Integer integer = paramsCalculator.getMapValueAvoidClassCastException(map, "integer", Integer.class);
+        String string = paramsCalculator.getMapValueAvoidClassCastException(map, "string", String.class);
+        Integer fakeInteger = paramsCalculator.getMapValueAvoidClassCastException(map, "fake_integer", Integer.class);
+        Long longInteger = paramsCalculator.getMapValueAvoidClassCastException(map, "fake_integer", Long.class);
+        Long nullInteger = paramsCalculator.getMapValueAvoidClassCastException(map, "null_integer", Long.class);
+
+        assertThat(integer).isEqualTo(100);
+        assertThat(string).isEqualTo("hola");
+        assertThat(fakeInteger).isNull();
+        assertThat(longInteger).isEqualTo(null);
+        assertThat(nullInteger).isEqualTo(null);
+    }
+
 }

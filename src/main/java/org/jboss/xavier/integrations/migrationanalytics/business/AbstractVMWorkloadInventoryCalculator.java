@@ -66,7 +66,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             List<List<Map>> value = jsonParsed.read(expandParamsInPath);
             value.stream().flatMap(Collection::stream).collect(Collectors.toList()).forEach(e-> files.put((String) e.get(keyfield), (String) e.get(valuefield)));
         } catch (Exception e) {
-            log.warn("Exception reading value from JSON", e);
+            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
         }
         return files;
     }
@@ -88,7 +88,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             }
         } catch (Exception e) {
             value = null;
-            log.warn("Exception reading value from JSON", e);
+            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
         }
         return (T) value;
     }
@@ -108,7 +108,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
                 return Collections.singletonList((T) value);
             }
         } catch (Exception e) {
-            log.warn("Exception reading value from JSON", e);
+            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
             return Collections.emptyList();
         }
     }

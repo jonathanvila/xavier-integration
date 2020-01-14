@@ -64,7 +64,10 @@ public class VMWorkloadInventoryCalculator extends AbstractVMWorkloadInventoryCa
 
         model.setOsProductName(StringUtils.defaultIfEmpty(readValueFromExpandedEnvVarPath(PRODUCTNAMEPATH, vmStructMap), readValueFromExpandedEnvVarPath(PRODUCTNAME_FALLBACKPATH, vmStructMap )));
         model.setGuestOSFullName(StringUtils.defaultIfEmpty(readValueFromExpandedEnvVarPath(GUESTOSFULLNAMEPATH, vmStructMap ), readValueFromExpandedEnvVarPath(GUESTOSFULLNAME_FALLBACKPATH, vmStructMap )));
-        model.setHasRdmDisk(readValueFromExpandedEnvVarPath(HASRDMDISKPATH, vmStructMap));
+        Boolean hasRdmDisk = readValueFromExpandedEnvVarPath(HASRDMDISKPATH, vmStructMap);
+        if (hasRdmDisk != null) {
+            model.setHasRdmDisk(hasRdmDisk);
+        }
 
         List<Number> diskSpaceList = readListValuesFromExpandedEnvVarPath(DISKSIZEPATH, vmStructMap);
         model.setDiskSpace(diskSpaceList.stream().filter(Objects::nonNull).mapToLong(Number::longValue).sum());

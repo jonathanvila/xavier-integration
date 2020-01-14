@@ -23,10 +23,19 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
     }
 
     public Integer calculateHypervisors(Map valuesMap, String cpuTotalCoresPath, String cpuCoresPerSocketPath) {
-        Integer cputotalcores = (Integer) valuesMap.get(cpuTotalCoresPath);
-        Integer cpucorespersocket = (Integer) valuesMap.get(cpuCoresPerSocketPath);
+        Integer cputotalcores = getMapValueAvoidClassCastException(valuesMap, cpuTotalCoresPath, Integer.class);
+        Integer cpucorespersocket = getMapValueAvoidClassCastException(valuesMap, cpuCoresPerSocketPath, Integer.class);
         if (cputotalcores != null && cpucorespersocket != null && cpucorespersocket > 0) {
             return (int) Math.ceil(cputotalcores / (cpucorespersocket * 2.0));
+        } else {
+            return null;
+        }
+    }
+
+    public <T> T getMapValueAvoidClassCastException(Map valuesMap, String key, Class<T> expectedClass) {
+        Object mapValue = (T) valuesMap.get(key);
+        if (mapValue != null && mapValue.getClass().isAssignableFrom(expectedClass)) {
+            return (T) mapValue;
         } else {
             return null;
         }
