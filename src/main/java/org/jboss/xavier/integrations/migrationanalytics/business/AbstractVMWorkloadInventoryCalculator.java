@@ -2,6 +2,7 @@ package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import com.jayway.jsonpath.DocumentContext;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.xavier.integrations.migrationanalytics.business.issuehandling.AnalysisIssuesHandler;
 import org.jboss.xavier.integrations.migrationanalytics.business.versioning.ManifestVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -55,6 +56,9 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
     @Inject
     protected ManifestVersionService manifestVersionService;
 
+    @Inject
+    protected AnalysisIssuesHandler analysisIssuesHandler;
+
     protected DocumentContext jsonParsed;
     protected String manifestVersion;
     protected Date scanRunDate;
@@ -66,7 +70,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             List<List<Map>> value = jsonParsed.read(expandParamsInPath);
             value.stream().flatMap(Collection::stream).collect(Collectors.toList()).forEach(e-> files.put((String) e.get(keyfield), (String) e.get(valuefield)));
         } catch (Exception e) {
-            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
         }
         return files;
     }
@@ -88,7 +92,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             }
         } catch (Exception e) {
             value = null;
-            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
         }
         return (T) value;
     }
@@ -108,7 +112,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
                 return Collections.singletonList((T) value);
             }
         } catch (Exception e) {
-            log.warn("Exception reading value from JSON : " + expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
             return Collections.emptyList();
         }
     }

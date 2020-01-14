@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.integrations.migrationanalytics.business.issuehandling.AnalysisIssuesHandler;
 import org.jboss.xavier.integrations.migrationanalytics.business.versioning.ManifestVersionService;
 import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 
@@ -18,16 +19,20 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
     private final ManifestVersionService manifestVersionService;
 
     @Inject
+    AnalysisIssuesHandler analysisIssuesHandler;
+
+    @Inject
     public ParamsCalculator(ManifestVersionService manifestVersionService) {
         this.manifestVersionService = manifestVersionService;
     }
 
-    public Integer calculateHypervisors(Map valuesMap, String cpuTotalCoresPath, String cpuCoresPerSocketPath) {
+    public Integer calculateHypervisors(Map valuesMap, String cpuTotalCoresPath, String cpuCoresPerSocketPath, String analysisId) {
         Integer cputotalcores = getMapValueAvoidClassCastException(valuesMap, cpuTotalCoresPath, Integer.class);
         Integer cpucorespersocket = getMapValueAvoidClassCastException(valuesMap, cpuCoresPerSocketPath, Integer.class);
         if (cputotalcores != null && cpucorespersocket != null && cpucorespersocket > 0) {
             return (int) Math.ceil(cputotalcores / (cpucorespersocket * 2.0));
         } else {
+            analysisIssuesHandler.record(analysisId, valuesMap.get("name").toString(), cpuCoresPerSocketPath, "Invalid values to calculate Hypervisors number");
             return null;
         }
     }
@@ -53,7 +58,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         // Calculations
         Integer numberofhypervisors = ((JSONArray) JsonPath.read(cloudFormsJson, hypervisorPath))
                 .stream()
-                .map(e -> calculateHypervisors((Map) e, cpuTotalCoresPath, cpuCoresPerSocketPath))
+                .map(e -> calculateHypervisors((Map) e, cpuTotalCoresPath, cpuCoresPerSocketPath, headers.get(RouteBuilderExceptionHandler.ANALYSIS_ID).toString()))
                 .filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
                 .sum();
