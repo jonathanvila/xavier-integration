@@ -70,7 +70,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             List<List<Map>> value = jsonParsed.read(expandParamsInPath);
             value.stream().flatMap(Collection::stream).collect(Collectors.toList()).forEach(e-> files.put((String) e.get(keyfield), (String) e.get(valuefield)));
         } catch (Exception e) {
-            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
         }
         return files;
     }
@@ -92,7 +92,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
             }
         } catch (Exception e) {
             value = null;
-            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
         }
         return (T) value;
     }
@@ -112,7 +112,7 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
                 return Collections.singletonList((T) value);
             }
         } catch (Exception e) {
-            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
             return Collections.emptyList();
         }
     }

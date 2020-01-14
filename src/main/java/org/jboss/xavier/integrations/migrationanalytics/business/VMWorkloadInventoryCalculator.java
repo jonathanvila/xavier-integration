@@ -65,7 +65,7 @@ public class VMWorkloadInventoryCalculator extends AbstractVMWorkloadInventoryCa
         if (numCPU != null && numCORES != null && numCORES > 0) {
             model.setCpuCores((numCPU / numCORES));
         } else {
-            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), vmStructMap.get("name").toString(), getExpandedPath(NUMCORESPERSOCKETPATH, vmStructMap), "CpuCores could not be calculated.");
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), getExpandedPath(NUMCORESPERSOCKETPATH, vmStructMap), "CpuCores could not be calculated.");
         }
 
         model.setOsProductName(StringUtils.defaultIfEmpty(readValueFromExpandedEnvVarPath(PRODUCTNAMEPATH, vmStructMap), readValueFromExpandedEnvVarPath(PRODUCTNAME_FALLBACKPATH, vmStructMap )));

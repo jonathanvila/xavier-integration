@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class AnalysisIssuesHandlerLogging implements AnalysisIssuesHandler {
 
     @Override
-    public void record(String analysisId, String vmName, String jsonPath, String message) {
-        log.warn("Exception on VM [{}] reading value from JSON [{}}] : {}" , vmName, jsonPath, message);
+    public void record(String analysisId, String entity, String entityName, String jsonPath, String message) {
+        log.warn("Exception on {} [{}] reading value from JSON [{}}] : {}" , entity, entityName, jsonPath, message);
     }
 }

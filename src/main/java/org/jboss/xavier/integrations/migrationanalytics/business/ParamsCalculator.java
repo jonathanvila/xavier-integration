@@ -32,7 +32,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         if (cputotalcores != null && cpucorespersocket != null && cpucorespersocket > 0) {
             return (int) Math.ceil(cputotalcores / (cpucorespersocket * 2.0));
         } else {
-            analysisIssuesHandler.record(analysisId, valuesMap.get("name").toString(), cpuCoresPerSocketPath, "Invalid values to calculate Hypervisors number");
+            analysisIssuesHandler.record(analysisId, "HOST", valuesMap.get("name").toString(), cpuCoresPerSocketPath, "Invalid values to calculate Hypervisors number");
             return null;
         }
     }
