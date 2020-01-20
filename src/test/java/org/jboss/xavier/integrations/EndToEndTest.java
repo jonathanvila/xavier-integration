@@ -18,6 +18,7 @@ import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ScanRunModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadsDetectedOSTypeModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
@@ -467,15 +468,19 @@ public class EndToEndTest {
                 .with().pollInterval(Duration.ONE_HUNDRED_MILLISECONDS)
                 .until(() -> {
                     ResponseEntity<WorkloadSummaryReportModel> workloadSummaryReport_file_vm_without_host = new RestTemplate().exchange("http://localhost:" + serverPort + workloadsummaryreport_vmwithouthost, HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<WorkloadSummaryReportModel>() {});
-                    return (workloadSummaryReport_file_vm_without_host != null &&
+                    boolean reportReady = workloadSummaryReport_file_vm_without_host != null &&
                             workloadSummaryReport_file_vm_without_host.getStatusCodeValue() == 200 &&
                             workloadSummaryReport_file_vm_without_host.getBody() != null &&
-                            workloadSummaryReport_file_vm_without_host.getBody().getSummaryModels() != null);
+                            workloadSummaryReport_file_vm_without_host.getBody().getSummaryModels() != null;
+                    if (reportReady) {
+                        assertThat(workloadSummaryReport_file_vm_without_host.getBody().getSummaryModels().stream().mapToInt(SummaryModel::getVms).sum()).isEqualTo(8);
+                    }
+                    return reportReady;
                 });
         ResponseEntity<PagedResources<WorkloadInventoryReportModel>> workloadInventoryReport_file_vm_without_host = new RestTemplate().exchange("http://localhost:" + serverPort + String.format("/api/xavier/report/%d/workload-inventory?size=100", analysisNum), HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<PagedResources<WorkloadInventoryReportModel>>() {});
         assertThat(workloadInventoryReport_file_vm_without_host.getBody().getContent().size()).isEqualTo(8);
-        assertThat(workloadInventoryReport_file_vm_without_host.getBody().getContent().stream().filter(e -> e.getVmName().equalsIgnoreCase("tomcat") || e.getVmName().equalsIgnoreCase("lb")).filter(e -> e.getDatacenter() == null && e.getCluster() == null).count()).isEqualTo(3);
-        assertThat(workloadInventoryReport_file_vm_without_host.getBody().getContent().stream().filter(e -> !e.getVmName().equalsIgnoreCase("tomcat") && !e.getVmName().equalsIgnoreCase("lb")).filter(e -> e.getDatacenter() != null && e.getCluster() != null).count()).isEqualTo(5);
+        assertThat(workloadInventoryReport_file_vm_without_host.getBody().getContent().stream().filter(e -> e.getDatacenter().equalsIgnoreCase("No datacenter defined") && e.getCluster().equalsIgnoreCase("No cluster defined")).count()).isEqualTo(2);
+        assertThat(workloadInventoryReport_file_vm_without_host.getBody().getContent().stream().filter(e -> !e.getDatacenter().equalsIgnoreCase("No datacenter defined") && !e.getCluster().equalsIgnoreCase("No cluster defined")).count()).isEqualTo(6);
 
         // Test with a file with Host without Cluster
         logger.info("+++++++  Test with a file with Host without Cluster ++++++");
@@ -485,19 +490,23 @@ public class EndToEndTest {
                 .atMost(timeoutMilliseconds_InitialCostSavingsReport, TimeUnit.MILLISECONDS)
                 .with().pollInterval(Duration.ONE_HUNDRED_MILLISECONDS)
                 .until(() -> {
-                    ResponseEntity<WorkloadSummaryReportModel> workloadSummaryReport_PerformanceMissingAttributes = new RestTemplate().exchange("http://localhost:" + serverPort + workloadsummaryreport_hostwithoutcluster, HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<WorkloadSummaryReportModel>() {});
-                    return (workloadSummaryReport_PerformanceMissingAttributes != null &&
-                            workloadSummaryReport_PerformanceMissingAttributes.getStatusCodeValue() == 200 &&
-                            workloadSummaryReport_PerformanceMissingAttributes.getBody() != null &&
-                            workloadSummaryReport_PerformanceMissingAttributes.getBody().getSummaryModels() != null);
+                    ResponseEntity<WorkloadSummaryReportModel> workloadSummaryReport_hostwithoutcluster = new RestTemplate().exchange("http://localhost:" + serverPort + workloadsummaryreport_hostwithoutcluster, HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<WorkloadSummaryReportModel>() {});
+                    boolean reportReady = workloadSummaryReport_hostwithoutcluster != null &&
+                            workloadSummaryReport_hostwithoutcluster.getStatusCodeValue() == 200 &&
+                            workloadSummaryReport_hostwithoutcluster.getBody() != null &&
+                            workloadSummaryReport_hostwithoutcluster.getBody().getSummaryModels() != null;
+                    if (reportReady) {
+                        assertThat(workloadSummaryReport_hostwithoutcluster.getBody().getSummaryModels().stream().mapToInt(SummaryModel::getVms).sum()).isEqualTo(8);
+                    }
+                    return reportReady;
                 });
         ResponseEntity<PagedResources<WorkloadInventoryReportModel>> workloadInventoryReport_file_host_without_cluster = new RestTemplate().exchange("http://localhost:" + serverPort + String.format("/api/xavier/report/%d/workload-inventory?size=100", analysisNum), HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<PagedResources<WorkloadInventoryReportModel>>() {});
         // Total VMs
         assertThat(workloadInventoryReport_file_host_without_cluster.getBody().getContent().size()).isEqualTo(8);
         // Wrong VMs
-        assertThat(workloadInventoryReport_file_host_without_cluster.getBody().getContent().stream().filter(e -> e.getVmName().equalsIgnoreCase("tomcat") || e.getVmName().equalsIgnoreCase("jboss0") || e.getVmName().equalsIgnoreCase("hana")).filter(e -> e.getDatacenter() == null && e.getCluster() == null).count()).isEqualTo(3);
+        assertThat(workloadInventoryReport_file_host_without_cluster.getBody().getContent().stream().filter(e -> e.getDatacenter().equalsIgnoreCase("No datacenter defined") && e.getCluster().equalsIgnoreCase("No cluster defined")).count()).isEqualTo(3);
         // Right VMs
-        assertThat(workloadInventoryReport_file_host_without_cluster.getBody().getContent().stream().filter(e -> !e.getVmName().equalsIgnoreCase("tomcat") && !e.getVmName().equalsIgnoreCase("jboss0") && !e.getVmName().equalsIgnoreCase("hana")).filter(e -> e.getDatacenter() != null && e.getCluster() != null).count()).isEqualTo(5);
+        assertThat(workloadInventoryReport_file_host_without_cluster.getBody().getContent().stream().filter(e -> !e.getDatacenter().equalsIgnoreCase("No datacenter defined") && !e.getCluster().equalsIgnoreCase("No cluster defined")).count()).isEqualTo(5);
 
         // Test with a file with Wrong CPU cores per socket
         logger.info("+++++++  Test with a file with Wrong CPU cores per socket ++++++");
@@ -508,18 +517,22 @@ public class EndToEndTest {
                 .with().pollInterval(Duration.ONE_HUNDRED_MILLISECONDS)
                 .until(() -> {
                     ResponseEntity<WorkloadSummaryReportModel> workloadSummaryReport_PerformanceMissingAttributes = new RestTemplate().exchange("http://localhost:" + serverPort + workloadsummaryreport_wrongcpucorespersocket, HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<WorkloadSummaryReportModel>() {});
-                    return (workloadSummaryReport_PerformanceMissingAttributes != null &&
+                    boolean reportReady = workloadSummaryReport_PerformanceMissingAttributes != null &&
                             workloadSummaryReport_PerformanceMissingAttributes.getStatusCodeValue() == 200 &&
                             workloadSummaryReport_PerformanceMissingAttributes.getBody() != null &&
-                            workloadSummaryReport_PerformanceMissingAttributes.getBody().getSummaryModels() != null);
+                            workloadSummaryReport_PerformanceMissingAttributes.getBody().getSummaryModels() != null;
+                    if (reportReady) {
+                        assertThat(workloadSummaryReport_PerformanceMissingAttributes.getBody().getSummaryModels().stream().mapToInt(SummaryModel::getVms).sum()).isEqualTo(5);
+                    }
+                    return reportReady;
                 });
         ResponseEntity<InitialSavingsEstimationReportModel> initialCostSavingsReport_wrong_cpu_cores = new RestTemplate().exchange("http://localhost:" + serverPort + String.format("/api/xavier/report/%d/initial-saving-estimation", analysisNum), HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<InitialSavingsEstimationReportModel>() {});
         assertThat(initialCostSavingsReport_wrong_cpu_cores.getBody().getEnvironmentModel().getHypervisors()).isEqualTo(2);
 
         ResponseEntity<PagedResources<WorkloadInventoryReportModel>> workloadInventoryReport_file_wrong_cpu_cores = new RestTemplate().exchange("http://localhost:" + serverPort + String.format("/api/xavier/report/%d/workload-inventory?size=100", analysisNum), HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<PagedResources<WorkloadInventoryReportModel>>() {});
-        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().stream().filter(e -> e.getVmName().equalsIgnoreCase("hana") || e.getVmName().equalsIgnoreCase("jboss0") || e.getVmName().equalsIgnoreCase("db")).filter(e -> e.getCpuCores() == null).count()).isEqualTo(3);
-        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().stream().filter(e -> !e.getVmName().equalsIgnoreCase("hana") && !e.getVmName().equalsIgnoreCase("jboss0") && !e.getVmName().equalsIgnoreCase("db")).filter(e -> e.getCpuCores() != null).count()).isEqualTo(5);
-        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().size()).isEqualTo(8);
+        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().stream().filter(e -> e.getCpuCores() == null).count()).isEqualTo(0);
+        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().stream().filter(e -> e.getCpuCores() != null).count()).isEqualTo(5);
+        assertThat(workloadInventoryReport_file_wrong_cpu_cores.getBody().getContent().size()).isEqualTo(5);
 
         camelContext.stop();
     }
