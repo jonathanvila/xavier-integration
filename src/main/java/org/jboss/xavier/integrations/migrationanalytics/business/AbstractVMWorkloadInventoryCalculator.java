@@ -102,17 +102,17 @@ public abstract class AbstractVMWorkloadInventoryCalculator {
     }
 
     protected <T> List<T> readListValuesFromExpandedEnvVarPath(String envVarPath, Map vmStructMap) {
-        String expandParamsInPath = getExpandedPath(envVarPath, vmStructMap);
+        String pathWithExpandedParams = getExpandedPath(envVarPath, vmStructMap);
 
         try {
-            Object value = jsonParsed.read(expandParamsInPath);
+            Object value = jsonParsed.read(pathWithExpandedParams);
             if (value instanceof Collection) {
                 return new ArrayList<>((List<T>) value);
             } else {
                 return Collections.singletonList((T) value);
             }
         } catch (Exception e) {
-            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), expandParamsInPath, e.getMessage());
+            analysisIssuesHandler.record(vmStructMap.get("_analysisId").toString(), "VM", vmStructMap.get("name").toString(), pathWithExpandedParams, e.getMessage());
             return Collections.emptyList();
         }
     }
