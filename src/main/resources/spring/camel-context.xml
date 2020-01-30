@@ -263,7 +263,7 @@
                         <when>
                             <simple>${body} != null &amp;&amp; ${body.payloadStorageId} != null</simple>
                             <pollEnrich id="pollEnrich">
-                                <simple>aws-s3:xavier-dev?amazonS3Client=#s3client&amp;deleteAfterRead=false&amp;fileName=${body.payloadStorageId}</simple>
+                                <simple>aws-s3:{{S3_BUCKET}}?amazonS3Client=#s3client&amp;deleteAfterRead=false&amp;fileName=${body.payloadStorageId}</simple>
                             </pollEnrich>
                             <setHeader headerName="${type:org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat.CONTENT_DISPOSITION}">
                                 <simple>${header.CamelAwsS3ContentDisposition}</simple>
