@@ -4,8 +4,13 @@ import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportMode
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface InitialSavingsEstimationReportRepository extends JpaRepository<InitialSavingsEstimationReportModel, Long>
 {
     InitialSavingsEstimationReportModel findByAnalysisOwnerAndAnalysisId(String owner, Long id);
+
+    List<InitialSavingsEstimationReportModel> findByAnalysisIdEquals(Long id);
+
 }

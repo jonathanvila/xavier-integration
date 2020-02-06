@@ -23,6 +23,8 @@ public interface WorkloadInventoryReportRepository extends JpaRepository<Workloa
 
     Page<WorkloadInventoryReportModel> findByAnalysisId(Long analysisId, Specification<WorkloadInventoryReportModel> specification, Pageable pageable);
 
+    List<WorkloadInventoryReportModel> findByAnalysisIdEquals(Long analysisId);
+
     @Query(value = "select distinct wir.provider from WorkloadInventoryReportModel wir where wir.analysis.id = :analysisId")
     Set<String> findAllDistinctProvidersByAnalysisId(@Param("analysisId") Long analysisId);
 
