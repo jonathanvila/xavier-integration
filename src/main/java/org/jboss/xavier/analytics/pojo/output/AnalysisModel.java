@@ -36,7 +36,7 @@ public class AnalysisModel
     @JsonIgnore
     private InitialSavingsEstimationReportModel initialSavingsEstimationReportModel;
 
-    @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<WorkloadInventoryReportModel> workloadInventoryReportModels;
 
