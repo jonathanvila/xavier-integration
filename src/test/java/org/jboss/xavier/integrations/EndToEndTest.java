@@ -97,7 +97,6 @@ import java.util.zip.ZipFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertThat;
 import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @RunWith(CamelSpringBootRunner.class)
@@ -544,6 +543,22 @@ public class EndToEndTest {
 
         ResponseEntity<PageResponse<FlagAssessmentModel>> responseFlaggAssessmentHighLimit = new RestTemplate().exchange(getBaseURLAPIPath() + "/mappings/flag-assessment?limit=1000&offset=0", HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<PageResponse<FlagAssessmentModel>>() {});
         assertThat(responseFlaggAssessmentHighLimit.getBody().getData().size()).isEqualTo(15);
+
+        // Testing changes introduced in V5__update_flags_values
+        assertThat(responseFlaggAssessmentHighLimit.getBody().getData().stream()
+            .filter(e -> e.getFlag().equalsIgnoreCase("CPU Affinity")).findFirst().get().getFlagLabel()).isEqualToIgnoringCase("CPU affinity detected");
+
+        assertThat(responseFlaggAssessmentHighLimit.getBody().getData().stream()
+            .filter(e -> e.getFlag().equalsIgnoreCase("CPU Affinity")).findFirst().get().getAssessment()).isEqualToIgnoringCase("CPU affinity rules detected; unable to assign to specific nodes/CPU's");
+
+        assertThat(responseFlaggAssessmentHighLimit.getBody().getData().stream()
+            .filter(e -> e.getFlag().equalsIgnoreCase("VM HA")).findFirst().get().getFlagLabel()).isEqualToIgnoringCase("High Availability (HA) detected");
+
+        assertThat(responseFlaggAssessmentHighLimit.getBody().getData().stream()
+            .filter(e -> e.getFlag().equalsIgnoreCase("VM HA")).findFirst().get().getAssessment()).isEqualToIgnoringCase("HA disk locking detected and is unsupported in OpenShift Virtualization");
+
+        assertThat(responseFlaggAssessmentHighLimit.getBody().getData().stream()
+            .filter(e -> e.getFlag().equalsIgnoreCase("VMWare DRS")).findFirst().get().getAssessment()).isEqualToIgnoringCase("VM distributed resource scheduling between nodes detected and is unsupported in OpenShift Virtualization");
 
         // 1. Check user has firstTime
         ResponseEntity<User> userEntity = new RestTemplate().exchange(getBaseURLAPIPath() + "/user", HttpMethod.GET, getRequestEntity(), new ParameterizedTypeReference<User>() {});
