@@ -14,11 +14,10 @@
         "complexity": "Hard",
         "recommendedTargetsIMS": [
           "Red Hat Virtualization",
-          "Red Hat Enterprise Linux",
-          "Red Hat OpenStack Platform"
+          "Red Hat Enterprise Linux"
         ],
         "flagsIMS": [
-          "Shared Disk"
+          "Shared VMDK"
         ],
         "product": "VMware vCenter",
         "version": "6.7.2",
@@ -26,7 +25,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": false,
         "insightsEnabled": false,
-        "osFamily": "CentOS"
+        "osFamily": "CentOS",
+        "vmCategory": "Critical"
       },
       {
         "id": 48034,
@@ -43,11 +43,10 @@
         "complexity": "Hard",
         "recommendedTargetsIMS": [
           "Red Hat Virtualization",
-          "Red Hat Enterprise Linux",
-          "Red Hat OpenStack Platform"
+          "Red Hat Enterprise Linux"
         ],
         "flagsIMS": [
-          "Shared Disk"
+          "Shared VMDK"
         ],
         "product": "VMware vCenter",
         "version": "6.7.2",
@@ -55,7 +54,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": false,
         "insightsEnabled": false,
-        "osFamily": "CentOS"
+        "osFamily": "CentOS",
+        "vmCategory": "Critical"
       },
       {
         "id": 48029,
@@ -82,7 +82,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48023,
@@ -107,7 +108,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": false,
         "insightsEnabled": false,
-        "osFamily": "Other"
+        "osFamily": "Other",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48025,
@@ -136,7 +138,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48028,
@@ -166,7 +169,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48035,
@@ -196,7 +200,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48036,
@@ -223,7 +228,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48030,
@@ -252,7 +258,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48031,
@@ -281,7 +288,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "CentOS"
+        "osFamily": "CentOS",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48026,
@@ -310,7 +318,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "CentOS"
+        "osFamily": "CentOS",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48032,
@@ -340,7 +349,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48024,
@@ -370,7 +380,8 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "RHEL"
+        "osFamily": "RHEL",
+        "vmCategory": "Suitable"
       },
       {
         "id": 48027,
@@ -399,6 +410,7 @@
         "creationDate": 1568305947979,
         "ssaEnabled": true,
         "insightsEnabled": false,
-        "osFamily": "Windows Server"
+        "osFamily": "Windows Server",
+        "vmCategory": "Suitable"
       }
 ]

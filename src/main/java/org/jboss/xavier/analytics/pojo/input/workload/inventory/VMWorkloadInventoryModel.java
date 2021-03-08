@@ -59,6 +59,8 @@ public class VMWorkloadInventoryModel extends AbstractInputModel implements Seri
     private Integer balloonedMemory;
     private Boolean hasEncryptedDisk;
     private Boolean hasOpaqueNetwork;
+    private Boolean hasSriovNic;
+    private Boolean hasSharedVmdk;
 
     public VMWorkloadInventoryModel() 
     {
@@ -345,5 +347,21 @@ public class VMWorkloadInventoryModel extends AbstractInputModel implements Seri
 
     public void setCpuAffinity(String cpuAffinity) {
         this.cpuAffinity = cpuAffinity;
+    }
+
+    public Boolean getHasSriovNic() {
+        return hasSriovNic;
+    }
+
+    public void setHasSriovNic(Boolean hasSriovNic) {
+        this.hasSriovNic = hasSriovNic;
+    }
+
+    public Boolean getHasSharedVmdk() {
+        return hasSharedVmdk;
+    }
+
+    public void setHasSharedVmdk(Boolean hasSharedVmdk) {
+        this.hasSharedVmdk = hasSharedVmdk;
     }
 }

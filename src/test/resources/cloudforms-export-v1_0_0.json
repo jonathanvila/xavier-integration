@@ -3330,6 +3330,7 @@
                     "disks_aligned": "True",
                     "ems_ref": "vm-222",
                     "has_rdm_disk": false,
+                    "has_shared_disk": false,
                     "host": {
                         "ems_ref": "host-47"
                     },
@@ -4246,6 +4247,7 @@
                     "disks_aligned": "True",
                     "ems_ref": "vm-223",
                     "has_rdm_disk": false,
+                    "has_shared_disk": true,
                     "host": {
                         "ems_ref": "host-31"
                     },

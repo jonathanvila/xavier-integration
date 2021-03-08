@@ -116,10 +116,12 @@ public class VMWorkloadInventoryCalculator extends AbstractVMWorkloadInventoryCa
         model.setHasVmHaConfig(getValueForBooleanFieldHandlingPathNotPresent(HASVMHACONFIG, vmStructMap, "Setting value to null."));
         model.setHasEncryptedDisk(getValueForBooleanFieldHandlingPathNotPresent(HASENCRYPTEDDISK, vmStructMap, "Setting value to null."));
         model.setHasOpaqueNetwork(getValueForBooleanFieldHandlingPathNotPresent(HASOPAQUENETWORK, vmStructMap, "Setting value to null."));
+        model.setHasSriovNic(getValueForBooleanFieldHandlingPathNotPresent(HASSRIOVNIC, vmStructMap, "Setting value to null."));
 
         model.setNumaNodeAffinity(getValueForExpandedPathAndHandlePathNotPresent(NUMANODEAFFINITY, vmStructMap, "Setting value to null."));
         model.setFirmware(getValueForExpandedPathAndHandlePathNotPresent(FIRMWARE, vmStructMap, "Setting value to null."));
         model.setBalloonedMemory(getValueForExpandedPathAndHandlePathNotPresent(BALLOONEDMEMORY, vmStructMap, "Setting value to null."));
+        model.setHasSharedVmdk(getValueForBooleanFieldHandlingPathNotPresent(HASSHAREDVMDK, vmStructMap, "Setting value to null."));
 
         model.setAnalysisId(Long.parseLong(vmStructMap.get("_analysisId").toString()));
 

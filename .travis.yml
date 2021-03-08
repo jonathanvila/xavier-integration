@@ -46,7 +46,7 @@ jobs:
     - stage: Test
       env:
         - CAMEL_SPRINGBOOT_TRACING=false
-        - LOGGING_LEVEL_ROOT=info
+        - LOGGING_LEVEL_ROOT=WARN
         - ANALYSIS_DATAINTEGRITY_LOG=false
       script:
         - mvn test -Pcoverage -Danalysis.dataintegrity.log=false

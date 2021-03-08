@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@MockEndpointsAndSkip("seda:uploadFormInputDataModel|direct:send-costsavings|direct:calculate-vmworkloadinventory|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel|direct:flags-shared-disks")
+@MockEndpointsAndSkip("seda:uploadFormInputDataModel|direct:send-costsavings|direct:calculate-vmworkloadinventory|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel")
 public class MainRouteBuilder_DirectUnzipFileTest extends XavierCamelTest {
 
     @EndpointInject(uri = "mock:direct:store")
@@ -65,6 +65,7 @@ public class MainRouteBuilder_DirectUnzipFileTest extends XavierCamelTest {
             camelContext.startRoute("unzip-file");
             camelContext.startRoute("calculate");
             camelContext.startRoute("calculate-costsavings");
+            camelContext.startRoute("flags-shared-disks");
 
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
@@ -105,6 +106,7 @@ public class MainRouteBuilder_DirectUnzipFileTest extends XavierCamelTest {
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("flags-shared-disks");
 
         camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(nameOfFile));
@@ -143,6 +145,7 @@ public class MainRouteBuilder_DirectUnzipFileTest extends XavierCamelTest {
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("flags-shared-disks");
 
         camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(nameOfFile));

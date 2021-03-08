@@ -273,7 +273,7 @@ public class MainRouteBuilder extends RouteBuilderExceptionHandler {
         from("direct:calculate").routeId("calculate")
                 .convertBodyTo(String.class)
                 .multicast().aggregationStrategy(new GroupedBodyAggregationStrategy())
-                    .to("direct:calculate-costsavings", "direct:calculate-vmworkloadinventory", "direct:flags-shared-disks")
+                    .to("direct:calculate-costsavings", "direct:flags-shared-disks" )
                 .setBody(e -> e.getIn().getBody(List.class).get(0))
                 .end();
 

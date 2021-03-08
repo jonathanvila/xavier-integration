@@ -31,29 +31,14 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierC
     private WorkloadInventoryReportService workloadInventoryReportService;
 
     @Test
-    public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldReturnExpectedCalculatedValues() throws Exception {
+    public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldCalculateCorrectSharedDiskVMs() throws Exception {
         //Given
-        camelContext.getRouteDefinition("flags-shared-disks").adviceWith(camelContext, new AdviceWithRouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                mockEndpointsAndSkip("direct:reevaluate-workload-inventory-reports");
-            }
-        });
-
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name", "user_account_number");
         Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
         expectedVmNamesWithSharedDisk.add("dev-windows-server-2008-TEST");
         expectedVmNamesWithSharedDisk.add("james-db-03-copy");
         expectedVmNamesWithSharedDisk.add("dev-windows-server-2008");
         expectedVmNamesWithSharedDisk.add("pemcg-rdm-test");
-        List<WorkloadInventoryReportModel> workloadInventoryReportModels = new ArrayList<>(expectedVmNamesWithSharedDisk.size());
-        expectedVmNamesWithSharedDisk.forEach(vm -> {
-            WorkloadInventoryReportModel workloadInventoryReportModel = new WorkloadInventoryReportModel();
-            workloadInventoryReportModel.setVmName(vm);
-            workloadInventoryReportModels.add(workloadInventoryReportModel);
-        });
-        when(workloadInventoryReportService.findByAnalysisOwnerAndAnalysisId("user name", analysisModel.getId())).thenReturn(workloadInventoryReportModels);
-
         String customerId = "CID123";
         String fileName = "cloudforms-export-v1.json";
         Long analysisId = analysisModel.getId();
@@ -70,7 +55,6 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierC
         //When
         camelContext.start();
         camelContext.startRoute("flags-shared-disks");
-        camelContext.startRoute("reevaluate-workload-inventory-reports");
         String body = IOUtils.resourceToString(fileName, StandardCharsets.UTF_8, this.getClass().getClassLoader());
 
         Exchange result = camelContext.createProducerTemplate().send("direct:flags-shared-disks", exchange -> {
@@ -78,18 +62,18 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierC
             exchange.getIn().setHeaders(headers);
         });
 
-        assertThat(result.getIn().getBody()).isEqualTo(workloadInventoryReportModels);
+        assertThat(result.getIn().getHeader("vmNamesWithSharedDisk", Set.class)).isEqualTo(expectedVmNamesWithSharedDisk);
 
         camelContext.stop();
     }
 
     @Test
-    public void mainRouteBuilder_DirectCalculate_JSONOnVersion1_0_0Given_ShouldReturnExpectedCalculatedValues() throws Exception {
+    public void mainRouteBuilder_DirectCalculate_JSONOnVersion1_0_0Given_ShouldCalculateCorrectSharedDiskVMs() throws Exception {
         //Given
         camelContext.getRouteDefinition("flags-shared-disks").adviceWith(camelContext, new AdviceWithRouteBuilder() {
             @Override
             public void configure() throws Exception {
-                mockEndpointsAndSkip("direct:reevaluate-workload-inventory-reports");
+                mockEndpointsAndSkip("direct:vm-workload-inventory");
             }
         });
 
@@ -97,13 +81,6 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierC
         Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
         expectedVmNamesWithSharedDisk.add("tomcat");
         expectedVmNamesWithSharedDisk.add("lb");
-        List<WorkloadInventoryReportModel> workloadInventoryReportModels = new ArrayList<>(expectedVmNamesWithSharedDisk.size());
-        expectedVmNamesWithSharedDisk.forEach(vm -> {
-            WorkloadInventoryReportModel workloadInventoryReportModel = new WorkloadInventoryReportModel();
-            workloadInventoryReportModel.setVmName(vm);
-            workloadInventoryReportModels.add(workloadInventoryReportModel);
-        });
-        when(workloadInventoryReportService.findByAnalysisOwnerAndAnalysisId("user name", analysisModel.getId())).thenReturn(workloadInventoryReportModels);
 
 
         String customerId = "CID123";
@@ -130,72 +107,7 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierC
             exchange.getIn().setHeaders(headers);
         });
 
-        assertThat(result.getIn().getBody()).isEqualTo(workloadInventoryReportModels);
-
-        camelContext.stop();
-    }
-
-    @Test
-    public void mainRouteBuilder_DirectReevaluateWorkloadInventoryReport_GivenWorkloadInventoryReports_ShouldUpdateComplexity() throws Exception {
-        //Given
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name", "user_account_number");
-
-
-        Long wirId = 1L;
-        String wirComplexity = "initialComplexity";
-
-        List<WorkloadInventoryReportModel> workloadInventoryReportModels = new ArrayList<>();
-
-        WorkloadInventoryReportModel workloadInventoryReportModel1 = new WorkloadInventoryReportModel();
-        workloadInventoryReportModel1.setId(wirId);
-        workloadInventoryReportModel1.setComplexity(wirComplexity);
-        workloadInventoryReportModel1.setAnalysis(analysisModel);
-
-        workloadInventoryReportModels.add(workloadInventoryReportModel1);
-
-
-        when(workloadInventoryReportService.findOneByOwnerAndId(analysisModel.getOwner(), wirId)).thenReturn(workloadInventoryReportModel1);
-
-
-        camelContext.getRouteDefinition("extract-vmworkloadinventory").adviceWith(camelContext, new AdviceWithRouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                mockEndpointsAndSkip("direct:decisionserver");
-                weaveById("workload-decisionserver")
-                        .after()
-                        .process(exchange -> exchange.getIn().setBody(IOUtils.resourceToString("kie-server-response-workloadinventoryreport.xml", StandardCharsets.UTF_8, MainRouteBuilder_DirectWorkloadInventoryTest.class.getClassLoader())))
-                        .unmarshal().xstream();
-            }
-        });
-        camelContext.getRouteDefinition("reevaluate-workload-inventory-reports").adviceWith(camelContext, new AdviceWithRouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                weaveById("reevaluate-workload-decisionserver")
-                        .after()
-                        .process(exchange -> {
-                            WorkloadInventoryReportModel workloadInventoryReportModel = exchange.getIn().getBody(WorkloadInventoryReportModel.class);
-                            workloadInventoryReportModel.setId(wirId); // Set id since the decisionServer mock is not giving the Id back
-                        });
-            }
-        });
-
-        //When
-        camelContext.start();
-        camelContext.startRoute("reevaluate-workload-inventory-reports");
-        camelContext.startRoute("extract-vmworkloadinventory");
-
-        Exchange result = camelContext.createProducerTemplate().send("direct:reevaluate-workload-inventory-reports", exchange -> {
-            exchange.getIn().setBody(workloadInventoryReportModels);
-            exchange.getIn().setHeader(RouteBuilderExceptionHandler.USERNAME, analysisModel.getOwner());
-        });
-
-        //Then
-        verify(workloadInventoryReportService).saveAll(workloadInventoryReportModels);
-
-        List<WorkloadInventoryReportModel> updatedWorkloadInventoryReportModels = result.getIn().getBody(List.class);
-        assertThat(updatedWorkloadInventoryReportModels).isNotNull();
-        assertThat(updatedWorkloadInventoryReportModels.size()).isEqualTo(1);
-        assertThat(updatedWorkloadInventoryReportModels.get(0).getComplexity()).isEqualTo("complexity"); // "complexity" comes from "kie-server-response-workloadinventoryreport.xml"
+        assertThat(result.getIn().getHeader("vmNamesWithSharedDisk")).isEqualTo(expectedVmNamesWithSharedDisk);
 
         camelContext.stop();
     }
